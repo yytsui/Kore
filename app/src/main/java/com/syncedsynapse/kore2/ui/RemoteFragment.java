@@ -380,42 +380,36 @@ public class RemoteFragment extends Fragment
     private void setNowPlayingInfo(ListType.ItemsAll nowPlaying,
                                    PlayerType.PropertyValue properties) {
         String title, underTitle, thumbnailUrl;
-        switch (nowPlaying.type) {
-            case ListType.ItemsAll.TYPE_MOVIE:
-                switchToPanel(R.id.media_panel, true);
+        if (nowPlaying.type.equals(ListType.ItemsAll.TYPE_MOVIE)) {
+            switchToPanel(R.id.media_panel, true);
 
-                title = nowPlaying.title;
-                underTitle = nowPlaying.tagline;
-                thumbnailUrl = nowPlaying.thumbnail;
-                break;
-            case ListType.ItemsAll.TYPE_EPISODE:
-                switchToPanel(R.id.media_panel, true);
+            title = nowPlaying.title;
+            underTitle = nowPlaying.tagline;
+            thumbnailUrl = nowPlaying.thumbnail;
+        } else if (nowPlaying.type.equals(ListType.ItemsAll.TYPE_EPISODE)) {
+            switchToPanel(R.id.media_panel, true);
 
-                title = nowPlaying.title;
-                String season = String.format(getString(R.string.season_episode_abbrev), nowPlaying.season, nowPlaying.episode);
-                underTitle = String.format("%s | %s", nowPlaying.showtitle, season);
-                thumbnailUrl = nowPlaying.art.poster;
-                break;
-            case ListType.ItemsAll.TYPE_SONG:
-                switchToPanel(R.id.media_panel, true);
+            title = nowPlaying.title;
+            String season = String.format(getString(R.string.season_episode_abbrev), nowPlaying.season, nowPlaying.episode);
+            underTitle = String.format("%s | %s", nowPlaying.showtitle, season);
+            thumbnailUrl = nowPlaying.art.poster;
+        } else if (nowPlaying.type.equals(ListType.ItemsAll.TYPE_SONG)) {
+            switchToPanel(R.id.media_panel, true);
 
-                title = nowPlaying.title;
-                underTitle = nowPlaying.displayartist + " | " + nowPlaying.album;
-                thumbnailUrl = nowPlaying.thumbnail;
-                break;
-            case ListType.ItemsAll.TYPE_MUSIC_VIDEO:
-                switchToPanel(R.id.media_panel, true);
+            title = nowPlaying.title;
+            underTitle = nowPlaying.displayartist + " | " + nowPlaying.album;
+            thumbnailUrl = nowPlaying.thumbnail;
+        } else if (nowPlaying.type.equals(ListType.ItemsAll.TYPE_MUSIC_VIDEO)) {
+            switchToPanel(R.id.media_panel, true);
 
-                title = nowPlaying.title;
-                underTitle = Utils.listStringConcat(nowPlaying.artist, ", ") + " | " + nowPlaying.album;
-                thumbnailUrl = nowPlaying.thumbnail;
-                break;
-            default:
-                switchToPanel(R.id.media_panel, true);
-                title = nowPlaying.label;
-                underTitle = "";
-                thumbnailUrl = nowPlaying.thumbnail;
-                break;
+            title = nowPlaying.title;
+            underTitle = Utils.listStringConcat(nowPlaying.artist, ", ") + " | " + nowPlaying.album;
+            thumbnailUrl = nowPlaying.thumbnail;
+        } else {
+            switchToPanel(R.id.media_panel, true);
+            title = nowPlaying.label;
+            underTitle = "";
+            thumbnailUrl = nowPlaying.thumbnail;
         }
 
         nowPlayingTitle.setText(title);

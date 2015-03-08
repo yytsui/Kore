@@ -605,7 +605,7 @@ public class LibrarySyncService extends Service {
                     @Override
                     public void onSucess(VideoType.DetailsTVShow result) {
                         deleteTVShows(contentResolver, hostId, tvshowId);
-                        List<VideoType.DetailsTVShow> tvShows = new ArrayList<>(1);
+                        List<VideoType.DetailsTVShow> tvShows = new ArrayList<VideoType.DetailsTVShow>(1);
                         tvShows.add(result);
                         insertTVShowsAndGetDetails(orchestrator, hostConnection, callbackHandler,
                                 contentResolver, tvShows);
@@ -938,7 +938,7 @@ public class LibrarySyncService extends Service {
             action.execute(hostConnection, new ApiCallback<List<AudioType.DetailsArtist>>() {
                 @Override
                 public void onSucess(List<AudioType.DetailsArtist> result) {
-                    if (result == null) result = new ArrayList<>(0); // Safeguard
+                    if (result == null) result = new ArrayList<AudioType.DetailsArtist>(0); // Safeguard
                     // First delete all music info
                     if (startIdx == 0) deleteMusicInfo(contentResolver, hostId);
 
@@ -1006,7 +1006,7 @@ public class LibrarySyncService extends Service {
             action.execute(hostConnection, new ApiCallback<List<LibraryType.DetailsGenre>>() {
                 @Override
                 public void onSucess(List<LibraryType.DetailsGenre> result) {
-                    if (result == null) result = new ArrayList<>(0); // Safeguard
+                    if (result == null) result = new ArrayList<LibraryType.DetailsGenre>(0); // Safeguard
                     ContentValues genresValuesBatch[] = new ContentValues[result.size()];
 
                     for (int i = 0; i < result.size(); i++) {
@@ -1057,7 +1057,7 @@ public class LibrarySyncService extends Service {
             action.execute(hostConnection, new ApiCallback<List<AudioType.DetailsAlbum>>() {
                 @Override
                 public void onSucess(List<AudioType.DetailsAlbum> result) {
-                    if (result == null) result = new ArrayList<>(0); // Safeguard
+                    if (result == null) result = new ArrayList<AudioType.DetailsAlbum>(0); // Safeguard
                     // Insert the partial results
                     ContentValues albumValuesBatch[] = new ContentValues[result.size()];
                     int artistsCount = 0, genresCount = 0;
@@ -1155,7 +1155,7 @@ public class LibrarySyncService extends Service {
             action.execute(hostConnection, new ApiCallback<List<AudioType.DetailsSong>>() {
                 @Override
                 public void onSucess(List<AudioType.DetailsSong> result) {
-                    if (result == null) result = new ArrayList<>(0); // Safeguard
+                    if (result == null) result = new ArrayList<AudioType.DetailsSong>(0); // Safeguard
                     // Save partial results to DB
                     ContentValues songValuesBatch[] = new ContentValues[result.size()];
                     for (int i = 0; i < result.size(); i++) {

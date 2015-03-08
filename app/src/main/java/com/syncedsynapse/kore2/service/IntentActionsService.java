@@ -53,32 +53,26 @@ public class IntentActionsService extends Service {
         int playerId = intent.getIntExtra(EXTRA_PLAYER_ID, -1);
 
         if ((hostConnection != null) && (playerId != -1)) {
-            switch (action) {
-                case ACTION_PLAY_PAUSE:
-                    hostConnection.execute(
-                            new Player.PlayPause(playerId),
-                            null, null);
-                    break;
-                case ACTION_REWIND:
-                    hostConnection.execute(
-                            new Player.SetSpeed(playerId, GlobalType.IncrementDecrement.DECREMENT),
-                            null, null);
-                    break;
-                case ACTION_FAST_FORWARD:
-                    hostConnection.execute(
-                            new Player.SetSpeed(playerId, GlobalType.IncrementDecrement.INCREMENT),
-                            null, null);
-                    break;
-                case ACTION_PREVIOUS:
-                    hostConnection.execute(
-                            new Player.GoTo(playerId, Player.GoTo.PREVIOUS),
-                            null, null);
-                    break;
-                case ACTION_NEXT:
-                    hostConnection.execute(
-                            new Player.GoTo(playerId, Player.GoTo.NEXT),
-                            null, null);
-                    break;
+            if (action.equals(ACTION_PLAY_PAUSE)) {
+                hostConnection.execute(
+                        new Player.PlayPause(playerId),
+                        null, null);
+            } else if (action.equals(ACTION_REWIND)) {
+                hostConnection.execute(
+                        new Player.SetSpeed(playerId, GlobalType.IncrementDecrement.DECREMENT),
+                        null, null);
+            } else if (action.equals(ACTION_FAST_FORWARD)) {
+                hostConnection.execute(
+                        new Player.SetSpeed(playerId, GlobalType.IncrementDecrement.INCREMENT),
+                        null, null);
+            } else if (action.equals(ACTION_PREVIOUS)) {
+                hostConnection.execute(
+                        new Player.GoTo(playerId, Player.GoTo.PREVIOUS),
+                        null, null);
+            } else if (action.equals(ACTION_NEXT)) {
+                hostConnection.execute(
+                        new Player.GoTo(playerId, Player.GoTo.NEXT),
+                        null, null);
             }
         }
 

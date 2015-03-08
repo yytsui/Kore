@@ -302,7 +302,7 @@ public class HostConnectionObserver
      */
     public void onQuit(System.OnQuit notification) {
         // Copy list to prevent ConcurrentModificationExceptions
-        List<PlayerEventsObserver> allObservers = new ArrayList<>(playerEventsObservers);
+        List<PlayerEventsObserver> allObservers = new ArrayList<PlayerEventsObserver>(playerEventsObservers);
         for (final PlayerEventsObserver observer : allObservers) {
             observer.systemOnQuit();
         }
@@ -310,7 +310,7 @@ public class HostConnectionObserver
 
     public void onRestart(System.OnRestart notification) {
         // Copy list to prevent ConcurrentModificationExceptions
-        List<PlayerEventsObserver> allObservers = new ArrayList<>(playerEventsObservers);
+        List<PlayerEventsObserver> allObservers = new ArrayList<PlayerEventsObserver>(playerEventsObservers);
         for (final PlayerEventsObserver observer : allObservers) {
             observer.systemOnQuit();
         }
@@ -318,7 +318,7 @@ public class HostConnectionObserver
 
     public void onSleep(System.OnSleep notification) {
         // Copy list to prevent ConcurrentModificationExceptions
-        List<PlayerEventsObserver> allObservers = new ArrayList<>(playerEventsObservers);
+        List<PlayerEventsObserver> allObservers = new ArrayList<PlayerEventsObserver>(playerEventsObservers);
         for (final PlayerEventsObserver observer : allObservers) {
             observer.systemOnQuit();
         }
@@ -326,7 +326,7 @@ public class HostConnectionObserver
 
     public void onInputRequested(Input.OnInputRequested notification) {
         // Copy list to prevent ConcurrentModificationExceptions
-        List<PlayerEventsObserver> allObservers = new ArrayList<>(playerEventsObservers);
+        List<PlayerEventsObserver> allObservers = new ArrayList<PlayerEventsObserver>(playerEventsObservers);
         for (final PlayerEventsObserver observer : allObservers) {
             observer.inputOnInputRequested(notification.title, notification.type, notification.value);
         }
@@ -484,7 +484,7 @@ public class HostConnectionObserver
             lastErrorDescription = description;
             forceReply = false;
             // Copy list to prevent ConcurrentModificationExceptions
-            List<PlayerEventsObserver> allObservers = new ArrayList<>(observers);
+            List<PlayerEventsObserver> allObservers = new ArrayList<PlayerEventsObserver>(observers);
             for (final PlayerEventsObserver observer : allObservers) {
                 notifyConnectionError(errorCode, description, observer);
             }
@@ -522,7 +522,7 @@ public class HostConnectionObserver
             lastCallResult = PlayerEventsObserver.PLAYER_IS_STOPPED;
             forceReply = false;
             // Copy list to prevent ConcurrentModificationExceptions
-            List<PlayerEventsObserver> allObservers = new ArrayList<>(observers);
+            List<PlayerEventsObserver> allObservers = new ArrayList<PlayerEventsObserver>(observers);
             for (final PlayerEventsObserver observer : allObservers) {
                 notifyNothingIsPlaying(observer);
             }
@@ -564,7 +564,7 @@ public class HostConnectionObserver
             lastGetItemResult = getItemResult;
             forceReply = false;
             // Copy list to prevent ConcurrentModificationExceptions
-            List<PlayerEventsObserver> allObservers = new ArrayList<>(observers);
+            List<PlayerEventsObserver> allObservers = new ArrayList<PlayerEventsObserver>(observers);
             for (final PlayerEventsObserver observer : allObservers) {
                 notifySomethingIsPlaying(getActivePlayersResult, getPropertiesResult, getItemResult, observer);
             }

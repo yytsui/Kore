@@ -189,36 +189,31 @@ public class NotificationService extends Service
         boolean isVideo = ((getItemResult.type.equals(ListType.ItemsAll.TYPE_MOVIE)) ||
                 (getItemResult.type.equals(ListType.ItemsAll.TYPE_EPISODE)));
 
-        switch (getItemResult.type) {
-            case ListType.ItemsAll.TYPE_MOVIE:
-                title = getItemResult.title;
-                underTitle = getItemResult.tagline;
-                poster = getItemResult.thumbnail;
-                smallIcon = R.drawable.ic_movie_white_24dp;
-                break;
-            case ListType.ItemsAll.TYPE_EPISODE:
-                title = getItemResult.title;
-                String seasonEpisode = String.format(getString(R.string.season_episode_abbrev),
-                        getItemResult.season, getItemResult.episode);
-                underTitle = String.format("%s | %s", getItemResult.showtitle, seasonEpisode);
-                poster = getItemResult.art.poster;
-                smallIcon = R.drawable.ic_tv_white_24dp;
-                break;
-            case ListType.ItemsAll.TYPE_SONG:
-                title = getItemResult.title;
-                underTitle = getItemResult.displayartist + " | " + getItemResult.album;
-                poster = getItemResult.thumbnail;
-                smallIcon = R.drawable.ic_headset_white_24dp;
-                break;
-            case ListType.ItemsAll.TYPE_MUSIC_VIDEO:
-                title = getItemResult.title;
-                underTitle = Utils.listStringConcat(getItemResult.artist, ", ") + " | " + getItemResult.album;
-                poster = getItemResult.thumbnail;
-                smallIcon = R.drawable.ic_headset_white_24dp;
-                break;
-            default:
-                // We don't know what this is, forget it
-                return;
+        if (getItemResult.type.equals(ListType.ItemsAll.TYPE_MOVIE)) {
+            title = getItemResult.title;
+            underTitle = getItemResult.tagline;
+            poster = getItemResult.thumbnail;
+            smallIcon = R.drawable.ic_movie_white_24dp;
+        } else if (getItemResult.type.equals(ListType.ItemsAll.TYPE_EPISODE)) {
+            title = getItemResult.title;
+            String seasonEpisode = String.format(getString(R.string.season_episode_abbrev),
+                    getItemResult.season, getItemResult.episode);
+            underTitle = String.format("%s | %s", getItemResult.showtitle, seasonEpisode);
+            poster = getItemResult.art.poster;
+            smallIcon = R.drawable.ic_tv_white_24dp;
+        } else if (getItemResult.type.equals(ListType.ItemsAll.TYPE_SONG)) {
+            title = getItemResult.title;
+            underTitle = getItemResult.displayartist + " | " + getItemResult.album;
+            poster = getItemResult.thumbnail;
+            smallIcon = R.drawable.ic_headset_white_24dp;
+        } else if (getItemResult.type.equals(ListType.ItemsAll.TYPE_MUSIC_VIDEO)) {
+            title = getItemResult.title;
+            underTitle = Utils.listStringConcat(getItemResult.artist, ", ") + " | " + getItemResult.album;
+            poster = getItemResult.thumbnail;
+            smallIcon = R.drawable.ic_headset_white_24dp;
+        } else {
+            // We don't know what this is, forget it
+            return;
         }
 
         switch (getPropertiesResult.speed) {
