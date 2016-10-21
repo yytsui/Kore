@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
+import android.support.design.internal.NavigationMenu;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -34,6 +35,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -44,8 +46,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.melnykov.fab.FloatingActionButton;
-import com.melnykov.fab.ObservableScrollView;
+
 
 import org.xbmc.kore.R;
 import org.xbmc.kore.Settings;
@@ -70,6 +71,8 @@ import java.util.ArrayList;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import io.github.yavski.fabspeeddial.FabSpeedDial;
+import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
 
 /**
  * Presents movie details
@@ -111,7 +114,7 @@ public class MovieDetailsFragment extends AbstractDetailsFragment
 
     @InjectView(R.id.exit_transition_view) View exitTransitionView;
     // Buttons
-    @InjectView(R.id.fab) ImageButton fabButton;
+    @InjectView(R.id.fab_speed_dial) FabSpeedDial fabButton;
     @InjectView(R.id.add_to_playlist) ImageButton addToPlaylistButton;
     @InjectView(R.id.go_to_imdb) ImageButton imdbButton;
     @InjectView(R.id.download) ImageButton downloadButton;
@@ -188,8 +191,8 @@ public class MovieDetailsFragment extends AbstractDetailsFragment
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton)fabButton;
-        fab.attachToScrollView((ObservableScrollView) mediaPanel);
+
+        fabButton.setMenuListener(speedDialMenuListenerAdapter);
 
         if(Utils.isLollipopOrLater()) {
             mediaPoster.setTransitionName(getArguments().getString(POSTER_TRANS_NAME));
@@ -306,11 +309,7 @@ public class MovieDetailsFragment extends AbstractDetailsFragment
         // Release loader's data
     }
 
-    /**
-     * Callbacks for button bar
-     */
-    @OnClick(R.id.fab)
-    public void onFabClicked(View v) {
+    public void playVideo() {
         PlaylistType.Item item = new PlaylistType.Item();
         item.movieid = movieId;
         Player.Open action = new Player.Open(item);
@@ -319,15 +318,18 @@ public class MovieDetailsFragment extends AbstractDetailsFragment
             public void onSuccess(String result) {
                 if (!isAdded()) return;
                 // Check whether we should switch to the remote
+
+
                 boolean switchToRemote = PreferenceManager
                         .getDefaultSharedPreferences(getActivity())
                         .getBoolean(Settings.KEY_PREF_SWITCH_TO_REMOTE_AFTER_MEDIA_START,
-                                    Settings.DEFAULT_PREF_SWITCH_TO_REMOTE_AFTER_MEDIA_START);
+                                Settings.DEFAULT_PREF_SWITCH_TO_REMOTE_AFTER_MEDIA_START);
                 if (switchToRemote) {
-                    int cx = (fabButton.getLeft() + fabButton.getRight()) / 2;
-                    int cy = (fabButton.getTop() + fabButton.getBottom()) / 2;
+                    final int cx = (fabButton.getLeft() + fabButton.getRight()) / 2;
+                    final int cy = (fabButton.getTop() + fabButton.getBottom()) / 2;
                     UIUtils.switchToRemoteWithAnimation(getActivity(), cx, cy, exitTransitionView);
                 }
+
             }
 
             @Override
@@ -335,10 +337,53 @@ public class MovieDetailsFragment extends AbstractDetailsFragment
                 if (!isAdded()) return;
                 // Got an error, show toast
                 Toast.makeText(getActivity(), R.string.unable_to_connect_to_xbmc, Toast.LENGTH_SHORT)
-                     .show();
+                        .show();
             }
         }, callbackHandler);
     }
+
+    public void startVideoStreamingIntent() {
+        if (movieDownloadInfo == null) {
+            // Nothing to play on local
+            Toast.makeText(getActivity(), R.string.no_files_to_play, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String videoUrl =  movieDownloadInfo.getMediaUrl(getHostInfo());
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl));
+        intent.setDataAndType(Uri.parse(videoUrl), "video/*");
+        startActivity(intent);
+    }
+
+    /**
+     * Callbacks for button bar
+     */
+
+    public SimpleMenuListenerAdapter speedDialMenuListenerAdapter = new SimpleMenuListenerAdapter(){
+        @Override
+        public void onMenuClosed() {
+            super.onMenuClosed();
+        }
+
+        @Override
+        public boolean onMenuItemSelected(MenuItem menuItem) {
+            switch (menuItem.getItemId()) {
+                case R.id.play_on_osmc:
+                    playVideo();
+                    break;
+                case R.id.stream_on_device:
+                    startVideoStreamingIntent();
+                    break;
+            }
+            return super.onMenuItemSelected(menuItem);
+        }
+
+        @Override
+        public boolean onPrepareMenu(NavigationMenu navigationMenu) {
+            //TODO: get hostinfo  then assign it to menu text
+            return super.onPrepareMenu(navigationMenu);
+        }
+    };
+
 
     @OnClick(R.id.add_to_playlist)
     public void onAddToPlaylistClicked(View v) {
@@ -430,17 +475,10 @@ public class MovieDetailsFragment extends AbstractDetailsFragment
 
     @OnClick(R.id.local_play)
     public void onLocalPlayClicked(View v) {
-        if (movieDownloadInfo == null) {
-            // Nothing to play on local
-            Toast.makeText(getActivity(), R.string.no_files_to_play, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        String videoUrl =  movieDownloadInfo.getMediaUrl(getHostInfo());
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl));
-        intent.setDataAndType(Uri.parse(videoUrl), "video/*");
-        startActivity(intent);
+        startVideoStreamingIntent();
     }
+
+
 
     @Override
     protected void onDownload() {

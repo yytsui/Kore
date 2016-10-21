@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/play_on_osmc"
+        android:title="@string/play_on_osmc" />
+    <item
+        android:id="@+id/stream_on_device"
+        android:title="@string/stream_on_device"/>
+
+</menu>

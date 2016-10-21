@@ -389,5 +389,8 @@
     <string name="write_storage_permission_denied">Permission denied. Won\'t be able to download files.</string>
 
     <string name="no_songs_to_download">No songs to download</string>
+    
+    <string name="play_on_osmc">Play on OSMC</string>
+    <string name="stream_on_device">Stream on Device</string>
 
 </resources>
